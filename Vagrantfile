@@ -10,6 +10,13 @@ if Vagrant::Util::Platform.windows? && !running_in_admin_mode?
 	raise Vagrant::Errors::VagrantError.new, "You must run Vagrant from an elevated command prompt"
 end
 
+if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/*").empty? || ARGV[1] == '--provision'
+    print "Please specify a hostname for your web server, for example `dev.example.com` \n"
+    print "Hostname: "
+    apache_host = STDIN.gets.chomp
+    print "\n"
+end
+
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/xenial64"
 
@@ -32,5 +39,5 @@ Vagrant.configure("2") do |config|
 	vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
   
-  config.vm.provision "shell", path: "bootstrap.sh", env: {}
+  config.vm.provision "shell", path: "bootstrap.sh", env: {"APACHE_HOST" => apache_host}
 end
