@@ -30,11 +30,12 @@ cd ~ && rm -f ~/vhost.sh && wget https://raw.githubusercontent.com/JimCronqvist/
 a2enmod vhost_alias
 a2enmod proxy_http
 
-cat <<EOF > /etc/apache2/sites-available/general.conf
+cat <<EOF > /etc/apache2/sites-available/virtual.conf
 <VirtualHost *:80>
 	UseCanonicalName Off
 	ServerName x.localhost
-	ServerAlias *.locahost
+	ServerAlias *.localhost
+	ServerAlias *.example.com
 	VirtualDocumentRoot /var/www/%1/public
 
 	<Directory "/var/www/*/public">
