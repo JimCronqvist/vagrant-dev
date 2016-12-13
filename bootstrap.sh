@@ -56,7 +56,7 @@ cat <<EOF > /etc/apache2/sites-available/virtual.conf
 </VirtualHost>
 EOF
 
-a2ensite general.conf
+a2ensite virtual.conf
 ./vhost.sh localhost /var/www
 sed -i 's/-Indexes/+Indexes/' /etc/apache2/sites-enabled/localhost.conf
 service apache2 reload
