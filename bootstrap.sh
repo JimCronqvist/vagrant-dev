@@ -19,6 +19,9 @@ cd ~ && rm -f ~/install.sh && wget https://raw.githubusercontent.com/JimCronqvis
 cd ~ && rm -f ~/vhost.sh && wget https://raw.githubusercontent.com/JimCronqvist/ubuntu-scripts/master/vhost.sh && chmod +x vhost.sh
 
 # Install the server
+hostname $APACHE_HOST
+grep -q -F "$APACHE_HOST" /etc/hosts || echo "127.0.0.1    $APACHE_HOST" >> /etc/hosts
+
 ./install.sh -o 1  # Step: Install all available updates
 ./install.sh -o 3  # Step: Basic installation
 ./install.sh -o 7  # Step: Install webtools (git, npm, uglify)
@@ -35,7 +38,7 @@ cat <<EOF > /etc/apache2/sites-available/virtual.conf
 	UseCanonicalName Off
 	ServerName x.localhost
 	ServerAlias *.localhost
-	ServerAlias *.example.com
+	ServerAlias *.$APACHE_HOST
 	VirtualDocumentRoot /var/www/%1/public
 
 	<Directory "/var/www/*/public">
@@ -58,7 +61,8 @@ EOF
 
 a2ensite virtual.conf
 ./vhost.sh localhost /var/www
-sed -i 's/-Indexes/+Indexes/' /etc/apache2/sites-enabled/localhost.conf
+sed -i "s/-Indexes/+Indexes/" /etc/apache2/sites-enabled/localhost.conf
+sed -i "s/#ServerAlias localhost/ServerAlias $APACHE_HOST/" /etc/apache2/sites-enabled/localhost.conf
 service apache2 reload
 
 # Run custom install scripts if any exist
