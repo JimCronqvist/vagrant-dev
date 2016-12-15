@@ -10,7 +10,7 @@ if Vagrant::Util::Platform.windows? && !running_in_admin_mode?
 	raise Vagrant::Errors::VagrantError.new, "You must run Vagrant from an elevated command prompt"
 end
 
-if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/*").empty? || ARGV[1] == '--provision'
+if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/virtualbox/*").empty? || ARGV[1] == '--provision'
     print "Please specify a hostname for your web server, for example `dev.example.com` \n"
     print "Hostname: "
     apache_host = STDIN.gets.chomp
