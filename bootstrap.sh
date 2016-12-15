@@ -18,10 +18,15 @@ cp /tmp/sources.list /etc/apt/sources.list
 cd ~ && rm -f ~/install.sh && wget https://raw.githubusercontent.com/JimCronqvist/ubuntu-scripts/master/install.sh && chmod +x install.sh
 cd ~ && rm -f ~/vhost.sh && wget https://raw.githubusercontent.com/JimCronqvist/ubuntu-scripts/master/vhost.sh && chmod +x vhost.sh
 
-# Install the server
+# Set the hostname
 hostname $APACHE_HOST
 grep -q -F "$APACHE_HOST" /etc/hosts || echo "127.0.0.1    $APACHE_HOST" >> /etc/hosts
 
+# Set the terminal name
+NEW_XTERM="PS1=\"\\\\[\\\\e]0;\${debian_chroot:+(\$debian_chroot)} $(hostname --fqdn) - \\\u: \\\w\\\a\\\]\$PS1\""
+sed -i "s/PS1=\"\\\\\[.*$/$NEW_XTERM/g" .bashrc
+
+# Install the server
 ./install.sh -o 1  # Step: Install all available updates
 ./install.sh -o 3  # Step: Basic installation
 ./install.sh -o 7  # Step: Install webtools (git, npm, uglify)
