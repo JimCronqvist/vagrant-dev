@@ -31,7 +31,8 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network. Bridged networks make the machine appear as another physical device on your network.
   #config.vm.network "public_network"
 
-  config.vm.synced_folder "../", "/var/www"
+  config.vm.synced_folder "../", "/var/www", id: "vagrant-root",
+    mount_options: ["dmode=777,fmode=664"]
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
